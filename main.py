@@ -39,13 +39,31 @@ def sequentialBargaining(budgets, numIters):
 
 
 '''
-Generates a budget with norm 1, with direction uniformly at random across the hyper-sphere.
+Generates a budget with L2 norm 1, with direction uniformly at random across the hyper-sphere.
 '''
-def generateRandomBudget(d):
+def generateRandomBudgetL2(d):
 	# Select each dimension from a Gaussian to ensure uniform direction
     vec = [random.gauss(0, 1) for i in range(d)]
     mag = sum(x**2 for x in vec)**0.5
     return [x / mag for x in vec]
+
+
+'''
+Generates a budget with L1 norm 1.
+'''
+def generateRandomBudgetL1(d):
+	result = []
+
+	# Generate d - 1 random numbers which randomly "divide"
+	# how much of the L1 norm goes to each axis.
+	randomNumbers = [random.random() for i in range(d - 1)]
+	randomNumbers.sort()
+	randomNumbers.insert(0, 0.0)
+	randomNumbers.append(1.0)
+	for i in range(1, d + 1):
+		result.append(randomNumbers[i] - randomNumbers[i - 1])
+
+	return result
 
 
 '''
@@ -68,7 +86,7 @@ def main():
 		d, N = input().split(" ")
 		d = int(d)
 		N = int(N)
-	budgets = [generateRandomBudget(d) for i in range(N)]
+	budgets = [generateRandomBudgetL1(d) for i in range(N)]
 
 	print(f"\nThe {str(N)} randomly generated preferred budgets are:\n")
 
