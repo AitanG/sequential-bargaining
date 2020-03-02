@@ -3,6 +3,9 @@ import statistics
 import sys
 
 
+'''
+Simple helper function that calculates the L1 distance between two vectors.
+'''
 def l1Cost(vec1, vec2):
 	dist = 0.0
 	for i in range(len(vec1)):
@@ -10,6 +13,9 @@ def l1Cost(vec1, vec2):
 	return dist
 
 
+'''
+Calculates the optimal result by finding the median of every coordinate independently.
+'''
 def optimalResult(budgets):
 	result = []
 	for i in range(len(budgets[0])):
@@ -18,6 +24,9 @@ def optimalResult(budgets):
 	return result
 
 
+'''
+Simulates the sequential bargaining solution.
+'''
 def sequentialBargaining(budgets, numIters):
 	c = random.choice(budgets)
 	for i in range(numIters):
@@ -29,6 +38,9 @@ def sequentialBargaining(budgets, numIters):
 	return c
 
 
+'''
+Generates a budget with norm 1, with direction uniformly at random across the hyper-sphere.
+'''
 def generateRandomBudget(d):
 	# Select each dimension from a Gaussian to ensure uniform direction
     vec = [random.gauss(0, 1) for i in range(d)]
@@ -36,6 +48,9 @@ def generateRandomBudget(d):
     return [x / mag for x in vec]
 
 
+'''
+Main method
+'''
 def main():
 	print("Welcome to the sequential bargaining simulator!")
 	print("Please input d followed by odd N, separated by a space.")
@@ -45,6 +60,7 @@ def main():
 	numIters = None
 	toPrompt = True
 	if len(sys.argv) > 1:
+		# Depending on the command line args, decide whether or not to prompt the user
 		toPrompt = False
 		[d, N, numIters] = [int(v) for v in sys.argv[1:]]
 
@@ -65,11 +81,13 @@ def main():
 	if toPrompt:
 		numIters = int(input())
 
+	# Perform simulation
 	result = sequentialBargaining(budgets, numIters)
 
 	print(f"\nThe result of {str(numIters)} iterations of sequential bargaining is:")
 	print("\t".join([" " + str(round(v, 3)) if v > 0 else str(round(v, 3)) for v in result]))
 
+	# Find optimum and calculate distortion
 	optimum = optimalResult(budgets)
 	resultCost = 0.0
 	optimumCost = 0.0
